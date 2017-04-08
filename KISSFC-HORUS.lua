@@ -653,6 +653,7 @@ globalTextOptions = MIDSIZE + TEXT_COLOR
 drawScreenTitle = function (title)
   lcd.drawFilledRectangle(0, 0, LCD_W, 30, TITLE_BGCOLOR)
   lcd.drawText(1, 5, title, MENU_TITLE_COLOR)
+  lcd.drawText(LCD_W-40, 5, currentPage.."/"..#(SetupPages), MENU_TITLE_COLOR)
   --lcd.drawText(LCD_W-40, 5, page.."/"..pages, MENU_TITLE_COLOR)
 end
 
@@ -661,6 +662,7 @@ local function drawScreen(page,page_locked)
 
    local screen_title = page.title
 
+   drawScreenTitle('Kiss Setup:  '..screen_title)
 
    for i=1,#(page.text) do
       local f = page.text[i]
@@ -671,11 +673,19 @@ local function drawScreen(page,page_locked)
       end
    end
    
+   if page.lines ~= nil then
+		for i=1,#(page.lines) do
+    	  local f = page.lines[i]
+			lcd.drawLine(f.x1, f.y1, f.x2, f.y2, SOLID, 0)
+		end
+	end
+   
    for i=1,#(page.fields) do
       local f = page.fields[i]
 
       local text_options = globalTextOptions
       if i == currentLine then
+         text_options = text_options + INVERS
          if gState == EDITING then
             text_options = text_options + BLINK
          end
@@ -743,14 +753,17 @@ local function drawMenu()
    local x = 120
    local y = 100
    local w = 200
+   local x_offset = 70
    local h_line = 20
    local h_offset = 6
    local h = #(menuList) * h_line + h_offset*2
 
    lcd.drawFilledRectangle(x,y,w,h,backgroundFill)
    lcd.drawRectangle(x,y,w-1,h-1,foregroundColor)
+   lcd.drawText(x+h_line/2,y+h_offset,"Menu:", TEXT_COLOR)
 
    for i,e in ipairs(menuList) do
+      local text_options = TEXT_COLOR
       if menuActive == i then
          text_options = text_options + INVERS
       end
@@ -865,6 +878,9 @@ local function run(event)
    if gState == MENU_DISP then
       drawMenu()
    elseif gState == PAGE_SAVING then
+      lcd.drawFilledRectangle(120, 100, 180, 60, backgroundFill)
+      lcd.drawRectangle(120, 115, 180, 60, foregroundColor)
+      lcd.drawText(132,110,"Saving...", DBLSIZE + BLINK + TEXT_COLOR)
    end
 
    processKissReply(kissPollReply())
