@@ -1,5 +1,5 @@
 
-VERSION = 0.14
+VERSION = 0.15
 GIT_HASH = $(shell git log -1 --pretty=format:"%h")
 
 .PHONY: all
@@ -44,7 +44,7 @@ lua:
 
 	cp tmp/X9CF.lua obj/X9/KissCF.lua
 	cp tmp/X7CF.lua obj/X7/KissCF.lua
-	cp tmp/X-LiteCF.lua obj/KissCF.lua
+	cp tmp/X-LiteCF.lua obj/X-Lite/KissCF.lua
 	cp tmp/HorusCF.lua obj/Horus/KissCF.lua
 
 
